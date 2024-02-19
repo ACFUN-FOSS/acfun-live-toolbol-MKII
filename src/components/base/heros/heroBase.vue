@@ -14,9 +14,8 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 @import "@front/styles/common.scss";
-
 @font-face {
 	font-family: "包图小白体";
 	src: url("/fonts/包图小白体.ttf") format("truetype");

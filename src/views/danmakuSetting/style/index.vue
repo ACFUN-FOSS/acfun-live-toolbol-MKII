@@ -12,7 +12,7 @@
 			</span>
 		</row-span>
 		<row-frame :flex="true" width="100%" style="margin-bottom: 0px">
-			<row-span :span="2">
+			<row-span :span="4">
 				<row-frame width="100%" title="step1:导入">
 					<el-dropdown @command="loadCommand" type="primary" trigger="click" style="line-height: 28px">
 						<el-button type="primary"> 导入样式，从 </el-button>
@@ -28,13 +28,16 @@
 					</el-dropdown>
 				</row-frame>
 			</row-span>
-			<row-span :span="8.5">
+			<row-span :span="6.5">
 				<row-frame width="100%" title="step2:选择类型编辑">
-					<el-radio-group @change="currentWidget = {}" :disabled="!enable" v-model="styleType" class="setting-bar">
+					<!-- <el-radio-group @change="currentWidget = {}" :disabled="!enable" v-model="styleType" class="setting-bar">
 						<el-radio-button v-for="type in typeOptions" :label="type.value" :key="type.value">
 							{{ type.label }}
 						</el-radio-button>
-					</el-radio-group>
+					</el-radio-group> -->
+					<el-select :disabled="!enable" v-model="styleType" placeholder="选择类型" @change="currentWidget = {}">
+						<el-option v-for="type in typeOptions" :label="type.label" :key="type.value" :value="type.value" />
+					</el-select>
 				</row-frame>
 			</row-span>
 			<row-span :span="1.5">
@@ -54,7 +57,7 @@
 			</row-span>
 		</row-frame>
 		<row-frame width="100%" title="这是预览">
-			<div class="list-add-btn" style="top: 0px">
+			<div class="list-add-btn" style="top: -10px">
 				<div class="slider">
 					背景亮度：
 					<el-slider style="width: 100px" v-model="brightness" :min="20" :max="100" :step="1" />
@@ -436,7 +439,7 @@ export default defineComponent({
 @import "@front/styles/scrollbar.scss";
 @import "@front/styles/backgrounds.scss";
 .setting-bar {
-	:deep .el-radio-button--mini .el-radio-button__inner {
+	:deep(.el-radio-button--mini .el-radio-button__inner) {
 		padding: 7px 10px !important;
 	}
 }
@@ -463,7 +466,7 @@ export default defineComponent({
 .slider {
 	display: flex;
 	align-items: center;
-	margin-top: -10px;
+	// margin-top: -10px;
 	margin-right: 20px;
 }
 .drop-down-item {
