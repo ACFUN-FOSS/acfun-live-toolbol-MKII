@@ -48,7 +48,7 @@ yarn set version stable
 
 ### 2. Setup development environment variables
 
-⚠ ATTENTION: Every time a new shell session is entered, you should perform this step if you're gonna download anything with yarn.
+⚠ ATTENTION: Every time a new shell session is entered, you should always perform this step once as long as you're gonna download anything with yarn.
 After perform this step, *don't close your terminal window*, make sure you run `yarn install` or `yarn add` or something else in the same shell session.
 
 _Windows (CMD):_
