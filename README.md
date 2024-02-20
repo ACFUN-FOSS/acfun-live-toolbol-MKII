@@ -25,9 +25,22 @@
 
 ### 1. Setup yarn
 
-```sh
-# Please switch to node.js lts latest
+First, switch to node.js lts latest.
 
+ℹ️ NOTE: It is reported that switching between different version of node with nvm or something else may
+needs a restart of shell to take effect.
+
+After that, run
+
+```sh
+node --version
+```
+
+to check if node is usable.
+
+Then,
+
+```sh
 cd acfun-live-toolbox-MKII
 corepack enable
 yarn set version stable
@@ -35,23 +48,28 @@ yarn set version stable
 
 ### 2. Setup development environment variables
 
-⚠ ATTENTION: You should perform this step _every time_ you download anything with yarn.
+⚠ ATTENTION: Every time a new shell session is entered, you should perform this step if you're gonna download anything with yarn.
+After perform this step, *don't close your terminal window*, make sure you run `yarn install` or `yarn add` or something else in the same shell session.
 
-_Windows:_
+_Windows (CMD):_
 
 ```batch
 CALL dev-tools\setup_dev_envvars
 ```
 
-_UNIX:_
+_Windows (PowerShell):_
+
+```ps
+./dev-tools/setup_dev_envvars.ps1
+```
+
+_UNIX (UNIX Shell):_
 
 ```sh
 source ./dev-tools/setup_dev_envvars.sh
 ```
 
 ### 3. Install dependencies
-
-⚠ ATTENTION: You must create a new terminal to run code otherwise electron may not be built successfully.
 
 ```sh
 yarn install
