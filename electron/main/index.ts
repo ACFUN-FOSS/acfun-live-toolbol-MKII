@@ -1,19 +1,11 @@
 import { app, BrowserWindow, shell, protocol, globalShortcut } from "electron";
 import { release } from "node:os";
-import { join } from "node:path";
-import { MainWin, startHttp, Backend, File, KsApi, Voice, AppTest, Applets } from "../subsystem";
+import { MainWin } from "../subsystem";
+import { startHttp } from "../server";
 import { isRunningInDevServer as isRunningUnderDevServer } from "../sysUtils";
+import { configSystem, configBackend, configExternal } from "../server/api";
+import configStore from "../server/store";
 
-// The built directory structure
-//
-// ├─┬ dist-electron
-// │ ├─┬ main
-// │ │ └── index.js    > Electron-Main
-// │ └─┬ preload
-// │   └── index.js    > Preload-Scripts
-// ├─┬ dist
-// │ └── index.html    > Electron-Renderer
-//
 app.commandLine.appendSwitch("disable-renderer-backgrounding");
 app.commandLine.appendSwitch("disable-backgrounding-occluded-windows");
 app.commandLine.appendSwitch("ignore-certificate-errors");
@@ -29,7 +21,9 @@ if (release().startsWith("6.1")) app.disableHardwareAcceleration();
 if (process.platform === "win32") app.setAppUserModelId(app.getName());
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
+protocol.registerSchemesAsPrivileged([
+	{ scheme: "app", privileges: { secure: true, standard: true } },
+]);
 
 // Remove electron security warnings
 // This warning only shows in development mode
@@ -38,10 +32,7 @@ process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
 
 let win: BrowserWindow | null = null;
 
-// Here, you can also use other preload
-const preload = join(__dirname, "../preload/index.js");
 const url = process.env.VITE_DEV_SERVER_URL;
-const indexHtml = join(process.env.DIST, "index.html");
 
 async function createWindow() {
 	win = MainWin.newWindow();
@@ -72,28 +63,27 @@ async function createWindow() {
 	});
 	/**
 	 * 若于 DEV SERVER 中运行，则：
-	 *   - HTTP 服务器会成为「哑巴」，仅仅提供 ws 支持。
+	 *   - HTTP 服务器j仅提供api、消息中转
 	 *   - electron 浏览器载入 VITE DEV SERVER 所 serve 的 index.html。
 	 * 否则：
 	 * 	 - HTTP 服务器完整功能会发挥作用，除提供 ws 支持外也 serve
 	 *     静态文件（包括 index.html）。
 	 *   - electron 浏览器载入 HTTP SERVER 所 serve 的 index.html。
 	 *
-	 * 上述 ws 指工具箱各个实例（electron 窗口、浏览器打开的工具箱界面……）
-	 * 之间通信所用的 websocket，并非工具箱与后端通信所用的 websocket。
+	 * 消息中转采用EventSource
 	 */
-	if (isRunningUnderDevServer()) {
-		startHttp().then((res: any) => {
+	configStore();
+	startHttp().then((res: any) => {
+		configSystem(res.server);
+		configBackend(res.server);
+		configExternal(res.server);
+		if (isRunningUnderDevServer()) {
 			win.loadURL(url);
-			// Open devTool if the app is not packaged
 			win.webContents.openDevTools();
-		});
-	} else {
-		startHttp().then((res: any) => {
-			win.loadURL(res);
-			win.webContents.openDevTools();
-		});
-	}
+			return;
+		}
+		win.loadURL(res.url);
+	});
 
 	globalShortcut.register("CommandOrControl+F1", () => {
 		win.webContents.send("switch-ignore-mode");
@@ -105,18 +95,14 @@ async function createWindow() {
 		win.webContents.send("resize");
 	});
 
-	Backend.registerEvents();
-	File.registerEvents();
 	MainWin.registerEvents(win);
-	KsApi.registerEvents();
-	Voice.registerEvents();
-	AppTest.registerEvents(app);
-	Backend.init();
-	Applets.registerEvents();
 
 	// Test actively push message to the Electron-Renderer
 	win.webContents.on("did-finish-load", () => {
-		win?.webContents.send("main-process-message", new Date().toLocaleString());
+		win?.webContents.send(
+			"main-process-message",
+			new Date().toLocaleString()
+		);
 	});
 }
 
@@ -129,18 +115,12 @@ app.whenReady().then(() => {
 	createWindow();
 });
 
-if (isRunningUnderDevServer() || true) {
-	if (process.platform === "win32") {
-		process.on("message", (data) => {
-			if (data === "graceful-exit") {
-				app.quit();
-			}
-		});
-	} else {
-		process.on("SIGTERM", () => {
+if (process.platform === "win32") {
+	process.on("message", (data) => {
+		if (data === "graceful-exit") {
 			app.quit();
-		});
-	}
+		}
+	});
 }
 
 // app.on("activate", () => {

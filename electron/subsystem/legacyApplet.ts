@@ -3,7 +3,7 @@ import MainWin from "./mainwin";
 import { shell } from "electron";
 import File from "./file";
 import { appStatic } from "./paths";
-import { port } from "./http";
+import { port } from "../server";
 import { isRunningInDevServer } from "../sysUtils";
 const path = require("path");
 const fs = require("fs");
@@ -27,7 +27,7 @@ class LegacyApplet {
 			win.show();
 			// win.webContents.openDevTools();
 		});
-		win.webContents.on("new-window", function(e, url) {
+		win.webContents.on("new-window", function (e, url) {
 			e.preventDefault();
 			shell.openExternal(url);
 		});
@@ -57,7 +57,7 @@ class LegacyApplet {
 		MainWin.registerEvents(win);
 		const output = {
 			name,
-			win
+			win,
 		};
 		if (configurations.multiple) {
 			LegacyApplet.running[name]
@@ -66,7 +66,7 @@ class LegacyApplet {
 		} else {
 			LegacyApplet.running[name] = {
 				name,
-				win
+				win,
 			};
 		}
 	}
@@ -91,11 +91,14 @@ class LegacyApplet {
 					filePath,
 					"obs.vue"
 				);
-				if (!configurations.tags)
-					configurations.tags = [];
+				if (!configurations.tags) configurations.tags = [];
 				configurations.tags.push("OBS投射");
 			}
-			configurations.path = path.join("/legacyApplets", filePath, "index.vue");
+			configurations.path = path.join(
+				"/legacyApplets",
+				filePath,
+				"index.vue"
+			);
 			result.push(configurations);
 		}
 		event.reply("legacyApplet_list_ack", JSON.stringify(result));
