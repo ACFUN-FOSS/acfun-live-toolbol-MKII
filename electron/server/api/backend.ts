@@ -1,3 +1,6 @@
 import store from "./../store";
 
-export default (server) => {};
+export default (server:) => {
+	server.on()
+
+};
