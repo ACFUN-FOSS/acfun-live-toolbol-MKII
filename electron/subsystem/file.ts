@@ -65,11 +65,19 @@ class File {
 
 	static async restoreAndReadBackupConfig(event: any, p: any) {
 		try {
+<<<<<<< Updated upstream:electron/subsystem/file.ts
 			await UnZip(p, configStatic);
 			const config = File.loadFile(
 				path.join(configStatic, "./config.json")
 			);
 			event.reply("restoreAndReadBackupConfig_ack", config);
+=======
+			await zipFrom(p, configStatic);
+			const config = File.loadFile(
+				path.join(configStatic, "./config.json")
+			);
+			event.reply("load_backup_ack", config);
+>>>>>>> Stashed changes:electron/utils/file.ts
 		} catch (error) {
 			event.reply("restoreAndReadBackupConfig_ack", "#error");
 		}
@@ -227,7 +235,11 @@ class File {
 	static loadLegacyAppletSettings(event: any, res: any) {
 		const { name } = JSON.parse(res);
 		event.reply(
+<<<<<<< Updated upstream:electron/subsystem/file.ts
 			"legacyApplet_loadSettings_ack",
+=======
+			"load_applet_ack",
+>>>>>>> Stashed changes:electron/utils/file.ts
 			File.loadFile(path.join(configStatic, `${name}.json`))
 		);
 	}
@@ -361,8 +373,12 @@ class File {
 	}
 	static openFolder(event: any, res: any) {
 		let { url, create, home } = JSON.parse(res);
+<<<<<<< Updated upstream:electron/subsystem/file.ts
 
 		if (home && !path.isAbsolute(url)) {
+=======
+		if (home) {
+>>>>>>> Stashed changes:electron/utils/file.ts
 			url = path.join(require("os").homedir(), url);
 		}
 		if (!path.isAbsolute(url)) {

@@ -18,12 +18,20 @@ export default defineComponent({
 	methods: {
 		startApplet: startLegacyApplet,
 		refreshList() {
+<<<<<<< Updated upstream:src/views/legacyAppletsManager/mixin.ts
 			legacyAppletList().then((res) => {
+=======
+			appletList().then((res) => {
+>>>>>>> Stashed changes:src/views/applets/mixin.ts
 				(this.applets as any) = res;
 			});
 		},
 		openFolder() {
+<<<<<<< Updated upstream:src/views/legacyAppletsManager/mixin.ts
 			openFolder("./legacyApplets");
+=======
+			openFolder(`/.acfun-live-toolbox/app`, true);
+>>>>>>> Stashed changes:src/views/applets/mixin.ts
 		},
 		openDocument() {
 			openFile({

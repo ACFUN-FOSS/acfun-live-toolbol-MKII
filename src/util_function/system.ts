@@ -405,7 +405,11 @@ export const openFolder = (url: string, home = false) => {
 		throw new Error("no electron!");
 	}
 	ipcRenderer?.send(
+<<<<<<< Updated upstream
 		"openFolder",
+=======
+		"open_folder",
+>>>>>>> Stashed changes
 		JSON.stringify({ url, create: true, home })
 	);
 };
@@ -438,12 +442,21 @@ export const readSuperChatConfig = () => {
 			if (!isElectron()) {
 				throw new Error("no electron!");
 			}
+<<<<<<< Updated upstream
 			ipcRenderer?.send("ReadSuperchatConfig");
 			ipcRenderer?.once("ReadSuperchatConfig_ack", (e: any, args: any) => {
 				if (args !== "#error") {
 					resolve(JSON.parse(args));
 				} else {
 					throw new Error("load superchat config failed!");
+=======
+			ipcRenderer?.send("backend_load_superchat");
+			ipcRenderer?.once("load_superchat_ack", (e: any, args: any) => {
+				if (args !== "#error") {
+					resolve(JSON.parse(args));
+				} else {
+					throw new Error("load file failed!");
+>>>>>>> Stashed changes
 				}
 			});
 		} catch (error) {
