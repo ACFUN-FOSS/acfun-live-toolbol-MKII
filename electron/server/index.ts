@@ -1,11 +1,11 @@
 // TODO: REFACTOR: 将所有本文件中的 Http 字眼重命名为 HttpServer
 
-import { appStatic, configStatic } from "../subsystem/paths";
 import File from "../subsystem/file";
 import path from "path";
 import his from "connect-history-api-fallback";
 import ip from "ip";
 import express from "express";
+import routes from "./routes";
 
 const settings = JSON.parse(File.readConfig(null) || "{}");
 
@@ -36,19 +36,16 @@ export const startHttp = () => {
 			next();
 		});
 		server.use(
-			"/configFiles",
-			express.static(configStatic, {
-				immutable: true,
-			})
-		);
-		server.use(
 			his({
 				disableDotRule: false,
 				verbose: true,
 			})
 		);
 
-		server.use(express.static(appStatic));
+		server.use("/api/backend", routes.backendRequest);
+		server.use("/api/danmaku", routes.backendDanmaku);
+		server.use("/api/messagers", routes.messagers);
+		server.use("/api/toolbox", routes.toolbox);
 
 		// 处理访问 /obs/danmaku/assets/index-xxx.js 和 /obs/danmaku/assets/index-xxx.css
 		// URL 时候的回应。
