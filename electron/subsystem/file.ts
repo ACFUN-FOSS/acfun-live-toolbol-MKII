@@ -4,7 +4,7 @@ import { makeZip, UnZip } from "./zip";
 import { randomId } from "./base";
 import uniq from "lodash/uniq";
 // const log = require("electron-log");
-log.transports.file.maxSize = 100 * 1024 * 1024;
+// log.transports.file.maxSize = 100 * 1024 * 1024;
 const path = require("path");
 const fs = require("fs");
 const ba64 = require("ba64");
@@ -14,7 +14,7 @@ const crypto = require("crypto");
 // 	process.platform === "win32"
 // 		? path.join(appStatic, "./../../TellFQZWhatHappened.log")
 // 		: path.join(configStatic, "./TellFQZWhatHappened.log");
-export { log };
+// export { log };
 class File {
 	static registerEvents() {
 		ipcMain.on("backend_launch", this.launch);
@@ -44,7 +44,7 @@ class File {
 	}
 
 	static log(event: any, p: any) {
-		log.error(p);
+		// log.error(p);
 	}
 
 	static launch(event: any, p: any) {

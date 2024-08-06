@@ -3,16 +3,27 @@
 		<div class="mainTitle">{{ common.title + common.subTitle }}</div>
 		<div class="subTitle">版本：{{ common.version }}</div>
 		<div class="sidebarList">
-			<div class="listBlock" v-for="item in routingToShow" :key="item.meta.label">
+			<div
+				class="listBlock"
+				v-for="item in routingToShow"
+				:key="item.meta.label"
+			>
 				<div class="blockTitle">{{ item.meta.label }}</div>
 				<div
 					class="blockRow"
 					v-for="row in item.children"
 					:key="row.meta.label"
-					:class="{ active: $route.name == row.name, disabled: row.meta.disabled ? row.meta.disabled() : false }"
+					:class="{
+						active: $route.name == row.name,
+						disabled: row.meta.disabled
+							? row.meta.disabled()
+							: false,
+					}"
 					@click="route(row)"
 				>
-					<el-icon class="rowIcon"><component :is="row.meta.icon"></component></el-icon>{{ row.meta.label }}
+					<el-icon class="rowIcon"
+						><component :is="row.meta.icon"></component></el-icon
+					>{{ row.meta.label }}
 					<!-- <span class="rowIcon" :class="row.meta.icon" /> -->
 				</div>
 			</div>
@@ -25,33 +36,32 @@
 import { defineComponent } from "vue";
 import { footer, common } from "@front/texts";
 import { event } from "@front/util_function/eventBus";
-import { getElectronRouting } from "@front/router/electronRouting";
-
+import { electronRouting } from "@front/router/clientRouter";
 
 export default defineComponent({
 	name: "sidebarBase",
 	mounted() {
-		getElectronRouting().then((routing) => {
-			// TODO: REFACTOR: ?????
-			// TODO: REFACTOR: 可见拓展了 RouteRecordRaw（hidden 是自定义字段），用
-			// 接口描述数据结构。
-			// TODO: Edit /src/router/electronRouting.ts.
-			this.routingToShow = routing.slice(2).filter((i) =>!i.hidden);
+		//@ts-ignore
+		this.routingToShow = [...electronRouting].slice(1).filter((i: any) => {
+			if (i.hidden) {
+				return false;
+			}
+			if (i.children) {
+				return i.children.length;
+			}
+			return i;
 		});
 	},
 	data() {
 		return {
 			event,
-			routingToShow: []
+			routingToShow: [],
 		};
 	},
 	computed: {
 		footer,
 		common,
-		contents() {
-			
-			
-		}
+		contents() {},
 	},
 	methods: {
 		route(row: any) {
@@ -66,8 +76,8 @@ export default defineComponent({
 			if (typeof row.meta.action === "function") {
 				row.meta.action();
 			}
-		}
-	}
+		},
+	},
 });
 </script>
 

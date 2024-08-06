@@ -3,7 +3,7 @@ import { restart } from "@front/util_function/login";
 import { RouteRecordRaw } from "vue-router";
 const main = () => import("@front/layouts/main/index.vue");
 
-const electronRouting: RouteRecordRaw[] = [
+export const electronRouting: RouteRecordRaw[] = [
 	{
 		path: "/login",
 		name: "Login",
@@ -16,7 +16,7 @@ const electronRouting: RouteRecordRaw[] = [
 		meta: {
 			label: "直播",
 		},
-		redirect: "/dashboard",
+		redirect: "/home/dashboard",
 		children: [
 			{
 				path: "/dashboard",
@@ -35,81 +35,39 @@ const electronRouting: RouteRecordRaw[] = [
 					label: "房间管理",
 					icon: "House",
 					action: "router",
-					disabled: () => {
-						return store.state.streamStatus.step === "unstreamable";
-					},
 				},
 				component: () => import("@front/views/roomMgmt/index.vue"),
 			},
 			{
-				path: "/restart",
-				name: "restart",
+				path: "/nameList",
+				name: "roomNameList",
+				component: () => import("@front/views/roomNameList/index.vue"),
 				meta: {
-					label: "快速重启！",
-					icon: "RefreshRight",
-					action: restart,
-				},
-				redirect: "/",
-			},
-		],
-	},
-	{
-		path: "/record",
-		name: "record",
-		component: main,
-		meta: {
-			label: "录像",
-		},
-		children: [
-			{
-				path: "/streamRecord",
-				name: "streamRecord",
-				meta: {
-					label: "直播录制",
-					icon: "VideoCamera",
+					label: "小本本",
+					icon: "Tickets",
 					action: "router",
 					disabled: () => {
 						return false;
 					},
 				},
-				component: () => import("@front/views/records/index.vue"),
 			},
 		],
 	},
 	{
-		path: "/data",
-		name: "data",
+		path: "/plugIn",
+		name: "plugIn",
 		component: main,
 		meta: {
-			label: "数据",
+			label: "插件",
 		},
-		children: [
-			{
-				path: "/replay",
-				name: "replay",
-				meta: {
-					label: "完播复盘",
-					icon: "PieChart",
-					action: () => {
-						window.open(
-							`http://ac.sizzwoo.cc/rank/u/${store.state.userProfile.userID}`,
-							"_blank"
-						);
-					},
-					disabled: () => {
-						return false;
-					},
-				},
-				redirect: "/",
-			},
-		],
+		children: [],
 	},
 	{
 		path: "/config",
 		name: "config",
 		component: main,
 		meta: {
-			label: "设置与选项",
+			label: "设置",
 		},
 		children: [
 			{
@@ -127,64 +85,18 @@ const electronRouting: RouteRecordRaw[] = [
 				// redirect: "/"
 			},
 			{
-				path: "/config/superChat",
-				name: "superChat",
-				component: () => import("@front/views/superChat/index.vue"),
+				path: "/config/market",
+				name: "market",
+				component: () => import("@front/views/general/index.vue"),
 				meta: {
-					label: "超级聊",
-					icon: "Upload",
+					label: "插件市场",
+					icon: "Setting",
 					action: "router",
+					// disabled: () => {
+					// 	return true;
+					// }
 				},
-			},
-			{
-				path: "/config/emotion",
-				name: "emotion",
-				component: () => import("@front/views/emotion/index.vue"),
-				meta: {
-					label: "表情包",
-					icon: "Edit",
-					action: "router",
-				},
-			},
-			{
-				path: "/config/roomNameList",
-				name: "roomNameList",
-				component: () => import("@front/views/roomNameList/index.vue"),
-				meta: {
-					label: "小本本",
-					icon: "Tickets",
-					action: "router",
-					disabled: () => {
-						return false;
-					},
-				},
-			},
-			{
-				path: "/config/danmakuSetting",
-				name: "danmakuSetting",
-				component: () =>
-					import("@front/views/danmakuSetting/index.vue"),
-				meta: {
-					label: "弹幕流",
-					icon: "ChatLineSquare",
-					action: "router",
-					disabled: () => {
-						return false;
-					},
-				},
-			},
-			{
-				path: "/config/robot",
-				name: "robot",
-				component: () => import("@front/views/robot/index.vue"),
-				meta: {
-					label: "鸡鸡人",
-					icon: "User",
-					action: "router",
-					disabled: () => {
-						return false;
-					},
-				},
+				// redirect: "/"
 			},
 		],
 	},

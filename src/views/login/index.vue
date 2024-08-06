@@ -6,25 +6,56 @@
 				<hero-base class="hero" />
 				<div class="form">
 					<div class="row">
-						<el-input v-model="userData.account" :disabled="logining" @keypress.enter="login()" placeholder="A站账号手机号/邮箱" />
+						<el-input
+							v-model="userData.account"
+							:disabled="logining"
+							@keypress.enter="login()"
+							placeholder="A站账号手机号/邮箱"
+						/>
 					</div>
 					<div class="row">
-						<el-input type="password" v-model="userData.password" :disabled="logining" @keypress.enter="login()" placeholder="A站密码" />
+						<el-input
+							type="password"
+							v-model="userData.password"
+							:disabled="logining"
+							@keypress.enter="login()"
+							placeholder="A站密码"
+						/>
 					</div>
 					<div class="row sep">
 						<div class="sep-row">
-							<el-checkbox class="logCheck" v-model="userData.disclaimerCheck" :disabled="logining" />
+							<el-checkbox
+								class="logCheck"
+								v-model="userData.disclaimerCheck"
+								:disabled="logining"
+							/>
 							<span class="sep-l-item">同意</span>
-							<el-icon class="sep-l-item" size="14"><ArrowRightBold /></el-icon>
-							<span class="sep-l-item buttonText" @click="disclaimerDialog = true">免责声明</span>
+							<el-icon class="sep-l-item" size="14"
+								><ArrowRightBold
+							/></el-icon>
+							<span
+								class="sep-l-item buttonText"
+								@click="disclaimerDialog = true"
+								>免责声明</span
+							>
 						</div>
 						<div class="sep-row">
-							<el-checkbox class="logCheck" v-model="userData.keepLogined" :disabled="logining" />
+							<el-checkbox
+								class="logCheck"
+								v-model="userData.keepLogined"
+								:disabled="logining"
+							/>
 							<span class="sep-l-item">保持登录</span>
 						</div>
 					</div>
 					<div class="row">
-						<el-button type="primary" :disabled="loginDisabled" class="logBtn" @click="login(true)">登录 </el-button>
+						<el-button
+							type="primary"
+							:disabled="loginDisabled"
+							class="logBtn"
+							@click="login(true)"
+							>登录
+						</el-button>
 					</div>
 					<div class="row logText">
 						<transition name="fade" mode="out-in">
@@ -34,12 +65,19 @@
 				</div>
 			</div>
 			<div class="welcome" v-else>
-				<img class="welcomeLogo" :src="`${loginTexts.welcomeLogo}?a=${welcomeLogoKey}`" />
+				<img
+					class="welcomeLogo"
+					:src="`${loginTexts.welcomeLogo}?a=${welcomeLogoKey}`"
+				/>
 				<div class="welcomeText">{{ loginTexts.welcomeText }}</div>
 			</div>
 		</transition>
 		<footer-base class="foter right" />
-		<el-dialog class="dialogBase" title="免责声明" v-model="disclaimerDialog">
+		<el-dialog
+			class="dialogBase"
+			title="免责声明"
+			v-model="disclaimerDialog"
+		>
 			<div>{{ loginTexts.disclaimer }}</div>
 			<template #footer>
 				<el-button
@@ -71,7 +109,7 @@ import { login as loginTexts, common } from "@front/texts";
 export default defineComponent({
 	name: "login",
 	components: {
-		topbarBase
+		topbarBase,
 	},
 	data() {
 		const checkTimer: any = null;
@@ -80,7 +118,7 @@ export default defineComponent({
 				account: "",
 				password: "",
 				keepLogined: false,
-				disclaimerCheck: false
+				disclaimerCheck: false,
 			},
 			common: common(),
 			disclaimerDialog: false,
@@ -89,13 +127,18 @@ export default defineComponent({
 			checkTimer,
 			loginFailedText: "",
 			welcome: false,
-			welcomeLogoKey: "111"
+			welcomeLogoKey: "111",
 		} as Record<string, any>;
 	},
 	computed: {
 		loginTexts,
 		loginDisabled(): boolean {
-			return !this.userData.account || !this.userData.password || !this.userData.disclaimerCheck || this.logining;
+			return (
+				!this.userData.account ||
+				!this.userData.password ||
+				!this.userData.disclaimerCheck ||
+				this.logining
+			);
 		},
 		loginText(): string {
 			if (this.logining) {
@@ -108,7 +151,7 @@ export default defineComponent({
 				return "服务端已连接";
 			}
 			return "服务端离线,请尝试关闭工具箱并右键以管理员权限打开";
-		}
+		},
 	},
 	mounted() {
 		this.getCookie();
@@ -132,7 +175,11 @@ export default defineComponent({
 			this.checkTimer = setTimeout(this.checkOnline, 5000);
 		},
 		autoLogin(): void {
-			if (this.getCookie() && this.userData.keepLogined && sessionStorage.getItem("firstTime") !== "false") {
+			if (
+				this.getCookie() &&
+				this.userData.keepLogined &&
+				sessionStorage.getItem("firstTime") !== "false"
+			) {
 				this.login();
 			}
 		},
@@ -167,7 +214,7 @@ export default defineComponent({
 				this.setCookie(tokenInfo);
 			}
 			this.$store.dispatch("login");
-			this.$router.replace("dashboard");
+			this.$router.replace("/home/dashboard");
 		},
 		getCookie() {
 			const userData = Cookies.get("userData");
@@ -188,13 +235,17 @@ export default defineComponent({
 			Cookies.set("tokenInfo", tokenInfo, expiry);
 		},
 		validation() {
-			if (!this.userData.account || !this.userData.password || !this.userData.disclaimerCheck) {
+			if (
+				!this.userData.account ||
+				!this.userData.password ||
+				!this.userData.disclaimerCheck
+			) {
 				return false;
 			} else {
 				return true;
 			}
-		}
-	}
+		},
+	},
 });
 </script>
 

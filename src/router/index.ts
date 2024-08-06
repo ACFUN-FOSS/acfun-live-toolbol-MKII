@@ -1,11 +1,10 @@
 import {
 	createRouter as vueRouterCreateRouter,
 	createWebHistory,
-	RouteRecordRaw,
 	Router,
 } from "vue-router";
 import { isElectron } from "@front/util_function/electron";
-
+import { electronRouting } from "@front/router/clientRouter";
 // ATTENTION: Don't use:
 // process
 // global
@@ -55,10 +54,6 @@ function setupRouterFilter(router: Router) {
 					next(false);
 					return;
 				}
-				if (to.fullPath.includes("legacyApplet")) {
-					next();
-					return;
-				}
 
 				if (sessionStorage.getItem("logined") === "true") {
 					if (to.name !== "Login") {
@@ -86,21 +81,13 @@ function setupRouterFilter(router: Router) {
 // 的 module 均不能出现 top-level await，否则 await 将永远等待
 // （见 src/main.ts）
 export async function createRouter(): Promise<Router> {
-	const routings: Array<RouteRecordRaw> = await import(
-		"@front/router/clientRouter"
-	);
-
 	const router = (() => {
-		if (isElectron())
-			return vueRouterCreateRouter({
-				history: createWebHistory(process.env.BASE_URL),
-				routes: routings,
-			});
-		else
-			return vueRouterCreateRouter({
-				history: createWebHistory(),
-				routes: routings,
-			});
+		return vueRouterCreateRouter({
+			history: createWebHistory(
+				isElectron() ? process.env.BASE_URL : undefined
+			),
+			routes: electronRouting,
+		});
 	})();
 
 	setupRouterFilter(router);
