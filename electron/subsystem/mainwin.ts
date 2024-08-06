@@ -6,6 +6,7 @@ import process from "process";
 
 const preload = join(__dirname, "../preload/index.js");
 
+// 提供数据接口以调用electron api控制窗口
 // TODO: REFACTOR: 为 win 创建一个接口用于描述其数据结构
 let wins: any = [];
 let registered = false;
@@ -152,7 +153,7 @@ class MainWin {
 			minHeight: 200,
 			frame: false,
 			show: false,
-			resizable: process.env.NODE_ENV !== "production",
+			resizable: true,
 			transparent: true,
 			hasShadow: false,
 			webPreferences: {

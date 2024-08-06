@@ -3,17 +3,17 @@ import { appStatic, configStatic } from "./paths";
 import { makeZip, UnZip } from "./zip";
 import { randomId } from "./base";
 import uniq from "lodash/uniq";
-const log = require("electron-log");
+// const log = require("electron-log");
 log.transports.file.maxSize = 100 * 1024 * 1024;
 const path = require("path");
 const fs = require("fs");
 const ba64 = require("ba64");
 const spawn = require("child_process").spawn;
 const crypto = require("crypto");
-log.transports.file.resolvePath = () =>
-	process.platform === "win32"
-		? path.join(appStatic, "./../../TellFQZWhatHappened.log")
-		: path.join(configStatic, "./TellFQZWhatHappened.log");
+// log.transports.file.resolvePath = () =>
+// 	process.platform === "win32"
+// 		? path.join(appStatic, "./../../TellFQZWhatHappened.log")
+// 		: path.join(configStatic, "./TellFQZWhatHappened.log");
 export { log };
 class File {
 	static registerEvents() {
@@ -30,7 +30,10 @@ class File {
 
 		ipcMain.on("getVoiceList", this.getVoiceList);
 		ipcMain.on("backupConfig", this.backupConfig);
-		ipcMain.on("restoreAndReadBackupConfig", this.restoreAndReadBackupConfig);
+		ipcMain.on(
+			"restoreAndReadBackupConfig",
+			this.restoreAndReadBackupConfig
+		);
 		ipcMain.on("copyFileWithMd5Name", this.copyFileWithMd5Name);
 		ipcMain.on("getCacheSize", this.getCacheSize);
 		ipcMain.on("removeCache", this.removeCache);
@@ -54,7 +57,7 @@ class File {
 	}
 
 	static async backupConfig(event: any) {
-		const zipDir = path.join(appStatic, "backup.zip");
+		// const zipDir = path.join(appStatic, "backup.zip");
 		try {
 			await makeZip(configStatic, zipDir);
 			event.reply("backupConfig_ack", "/backup.zip");
@@ -65,19 +68,11 @@ class File {
 
 	static async restoreAndReadBackupConfig(event: any, p: any) {
 		try {
-<<<<<<< Updated upstream:electron/subsystem/file.ts
 			await UnZip(p, configStatic);
 			const config = File.loadFile(
 				path.join(configStatic, "./config.json")
 			);
 			event.reply("restoreAndReadBackupConfig_ack", config);
-=======
-			await zipFrom(p, configStatic);
-			const config = File.loadFile(
-				path.join(configStatic, "./config.json")
-			);
-			event.reply("load_backup_ack", config);
->>>>>>> Stashed changes:electron/utils/file.ts
 		} catch (error) {
 			event.reply("restoreAndReadBackupConfig_ack", "#error");
 		}
@@ -235,11 +230,7 @@ class File {
 	static loadLegacyAppletSettings(event: any, res: any) {
 		const { name } = JSON.parse(res);
 		event.reply(
-<<<<<<< Updated upstream:electron/subsystem/file.ts
 			"legacyApplet_loadSettings_ack",
-=======
-			"load_applet_ack",
->>>>>>> Stashed changes:electron/utils/file.ts
 			File.loadFile(path.join(configStatic, `${name}.json`))
 		);
 	}
@@ -373,12 +364,7 @@ class File {
 	}
 	static openFolder(event: any, res: any) {
 		let { url, create, home } = JSON.parse(res);
-<<<<<<< Updated upstream:electron/subsystem/file.ts
-
 		if (home && !path.isAbsolute(url)) {
-=======
-		if (home) {
->>>>>>> Stashed changes:electron/utils/file.ts
 			url = path.join(require("os").homedir(), url);
 		}
 		if (!path.isAbsolute(url)) {

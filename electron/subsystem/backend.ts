@@ -1,5 +1,4 @@
 import { ipcMain } from "electron";
-import { appStatic, configStatic } from "./paths";
 const { spawn } = require("child_process");
 const path = require("path");
 const find = require("find-process");
@@ -28,8 +27,9 @@ class Backend {
 		if (process.platform !== "win32") {
 			fs.chmodSync(exepath, 0o755);
 		}
-		const logfile = process.platform === "win32" ? path.join(appStatic, "./../../TellOrzogcWhatHappened") : path.join(configStatic, "./TellOrzogcWhatHappened");
-		const backend = spawn(exepath, ["-logfile", logfile, "-logversions", "10", "-tcp"]);
+		// const logfile = process.platform === "win32" ? path.join(appStatic, "./../../TellOrzogcWhatHappened") : path.join(configStatic, "./TellOrzogcWhatHappened");
+		// const backend = spawn(exepath, ["-logfile", logfile, "-logversions", "10", "-tcp"]);
+		const backend = spawn(exepath, ["-logfile"]);
 		process.on("exit", () => {
 			backend.kill();
 		});

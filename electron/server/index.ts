@@ -42,10 +42,10 @@ export const startHttp = () => {
 			})
 		);
 
-		server.use("/api/backend", routes.backendRequest);
-		server.use("/api/danmaku", routes.backendDanmaku);
-		server.use("/api/messagers", routes.messagers);
-		server.use("/api/toolbox", routes.toolbox);
+		// server.use("/api/backend", routes.backendRequest);
+		// server.use("/api/danmaku", routes.backendDanmaku);
+		// server.use("/api/messagers", routes.messagers);
+		// server.use("/api/toolbox", routes.toolbox);
 
 		// 处理访问 /obs/danmaku/assets/index-xxx.js 和 /obs/danmaku/assets/index-xxx.css
 		// URL 时候的回应。

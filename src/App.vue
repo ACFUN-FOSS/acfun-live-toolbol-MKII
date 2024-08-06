@@ -13,12 +13,8 @@
 -->
 
 <template>
-	<div id="app" :class="{logined:$store.state.isLogined}">
-		<router-view v-slot="{ Component }">
-			<transition name="fade" mode="out-in">
-				<component :is="Component" />
-			</transition>
-		</router-view>
+	<div id="app" >
+		 hello world!
 	</div>
 
 </template>

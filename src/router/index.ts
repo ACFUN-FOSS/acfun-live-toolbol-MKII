@@ -1,14 +1,16 @@
-import { createRouter as vueRouterCreateRouter, createWebHistory, RouteRecordRaw, Router } from "vue-router";
+import {
+	createRouter as vueRouterCreateRouter,
+	createWebHistory,
+	RouteRecordRaw,
+	Router,
+} from "vue-router";
 import { isElectron } from "@front/util_function/electron";
-import { getElectronRouting } from "@front/router/electronRouting";
 
 // ATTENTION: Don't use:
 // process
 // global
 // and any other node.js-specific global variables
 // in non-electron environment.
-
-
 
 //export default router;
 
@@ -32,7 +34,7 @@ import { getElectronRouting } from "@front/router/electronRouting";
 
 /**
  * 給路由器設置一咯過濾器，該過濾器負責主窗口在未登入時跳轉到登入頁面。
- * 
+ *
  * 在開發模式下，不起作用。
  */
 function setupRouterFilter(router: Router) {
@@ -45,7 +47,7 @@ function setupRouterFilter(router: Router) {
 					return;
 				}
 				next({
-					name: "404"
+					name: "404",
 				});
 			} else {
 				// @ts-ignore
@@ -64,7 +66,7 @@ function setupRouterFilter(router: Router) {
 						return;
 					}
 					next({
-						name: "dashboard"
+						name: "dashboard",
 					});
 					return;
 				}
@@ -73,7 +75,7 @@ function setupRouterFilter(router: Router) {
 					return;
 				}
 				next({
-					name: "Login"
+					name: "Login",
 				});
 			}
 		});
@@ -84,28 +86,23 @@ function setupRouterFilter(router: Router) {
 // 的 module 均不能出现 top-level await，否则 await 将永远等待
 // （见 src/main.ts）
 export async function createRouter(): Promise<Router> {
-
-	const routings: Array<RouteRecordRaw> = isElectron() ?
-		await (await import("@front/router/electronRouting")).getElectronRouting()
-		: (await import("@front/router/externalBrowserRouting")).externalBrowserRouting;
-
-	//const routings = await (await import("@front/router/electronRouting")).getElectronRouting();
-	// const routings = await getElectronRouting();
-
+	const routings: Array<RouteRecordRaw> = await import(
+		"@front/router/clientRouter"
+	);
 
 	const router = (() => {
 		if (isElectron())
 			return vueRouterCreateRouter({
 				history: createWebHistory(process.env.BASE_URL),
-				routes: routings
+				routes: routings,
 			});
 		else
 			return vueRouterCreateRouter({
 				history: createWebHistory(),
-				routes: routings
+				routes: routings,
 			});
 	})();
-	
+
 	setupRouterFilter(router);
 
 	return router;

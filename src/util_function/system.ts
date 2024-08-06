@@ -56,14 +56,20 @@ export const loadLegacyAppletSettings = (name: any) => {
 			if (!isElectron()) {
 				throw new Error("no electron!");
 			}
-			ipcRenderer?.send("legacyApplet_loadSettings", JSON.stringify({ name }));
-			ipcRenderer?.once("legacyApplet_loadSettings_ack", (e: any, args: any) => {
-				if (args !== "#error") {
-					resolve(JSON.parse(args));
-				} else {
-					throw new Error("legacyApplet_loadSettings failed!");
+			ipcRenderer?.send(
+				"legacyApplet_loadSettings",
+				JSON.stringify({ name })
+			);
+			ipcRenderer?.once(
+				"legacyApplet_loadSettings_ack",
+				(e: any, args: any) => {
+					if (args !== "#error") {
+						resolve(JSON.parse(args));
+					} else {
+						throw new Error("legacyApplet_loadSettings failed!");
+					}
 				}
-			});
+			);
 		} catch (error) {
 			reject(error);
 		}
@@ -72,7 +78,10 @@ export const loadLegacyAppletSettings = (name: any) => {
 
 export const saveLegacyAppletSettings = (name: any, data: any) => {
 	if (isElectron()) {
-		ipcRenderer?.send("legacyApplet_saveSettings", JSON.stringify({ name, data }));
+		ipcRenderer?.send(
+			"legacyApplet_saveSettings",
+			JSON.stringify({ name, data })
+		);
 	}
 };
 
@@ -328,13 +337,16 @@ export const restoreConfig = (path: string) => {
 				throw new Error("no electron!");
 			}
 			ipcRenderer?.send("restoreAndReadBackupConfig", path);
-			ipcRenderer?.once("restoreAndReadBackupConfig_ack", (e: any, args: any) => {
-				if (args !== "#error") {
-					resolve(JSON.parse(args));
-				} else {
-					throw new Error("读取备份文件失败！");
+			ipcRenderer?.once(
+				"restoreAndReadBackupConfig_ack",
+				(e: any, args: any) => {
+					if (args !== "#error") {
+						resolve(JSON.parse(args));
+					} else {
+						throw new Error("读取备份文件失败！");
+					}
 				}
-			});
+			);
 		} catch (error) {
 			reject(error);
 		}
@@ -405,11 +417,7 @@ export const openFolder = (url: string, home = false) => {
 		throw new Error("no electron!");
 	}
 	ipcRenderer?.send(
-<<<<<<< Updated upstream
 		"openFolder",
-=======
-		"open_folder",
->>>>>>> Stashed changes
 		JSON.stringify({ url, create: true, home })
 	);
 };
@@ -442,23 +450,17 @@ export const readSuperChatConfig = () => {
 			if (!isElectron()) {
 				throw new Error("no electron!");
 			}
-<<<<<<< Updated upstream
 			ipcRenderer?.send("ReadSuperchatConfig");
-			ipcRenderer?.once("ReadSuperchatConfig_ack", (e: any, args: any) => {
-				if (args !== "#error") {
-					resolve(JSON.parse(args));
-				} else {
-					throw new Error("load superchat config failed!");
-=======
-			ipcRenderer?.send("backend_load_superchat");
-			ipcRenderer?.once("load_superchat_ack", (e: any, args: any) => {
-				if (args !== "#error") {
-					resolve(JSON.parse(args));
-				} else {
-					throw new Error("load file failed!");
->>>>>>> Stashed changes
+			ipcRenderer?.once(
+				"ReadSuperchatConfig_ack",
+				(e: any, args: any) => {
+					if (args !== "#error") {
+						resolve(JSON.parse(args));
+					} else {
+						throw new Error("load superchat config failed!");
+					}
 				}
-			});
+			);
 		} catch (error) {
 			reject(error);
 		}
