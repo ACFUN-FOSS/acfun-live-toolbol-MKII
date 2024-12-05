@@ -24,6 +24,7 @@ build: # This job runs in the build stage, which runs first.
     stage: build
     script:
         -  whoami
+        - node -v
         - pnpm install
         - npm run build
     cache:
