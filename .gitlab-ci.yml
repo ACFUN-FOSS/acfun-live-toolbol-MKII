@@ -16,22 +16,31 @@
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
+ cache:
+    paths:
+        - node_modules/
+        - releases/
+
 stages: # List of stages for jobs, and their order of execution
+    - pre-build
     - build
     - deploy
 
-build: # This job runs in the build stage, which runs first.
-    stage: build
+pre-build: # This job runs in the build stage, which runs first.
+    stage: pre-build
     script:
         - ln -s /root/.nvm/versions/node/v22.12.0/bin/node /usr/bin/node
         - ln -s /root/.nvm/versions/node/v22.12.0/lib/node /usr/lib/node
         - ln -s /root/.nvm/versions/node/v22.12.0/bin/npm /usr/bin/npm
         - ln -s /root/.nvm/versions/node/v22.12.0/bin/pnpm /usr/bin/pnpm
         - pnpm install
+build: # This job runs in the build stage, which runs first.
+    stage: build
+    script:
         - npm run build
-    cache:
-        paths:
-            - node_modules/
+    artifacts:
+    paths:
+        - releases/
 
 deploy: # This job runs in the deploy stage.
     stage: deploy # It only runs when *both* jobs in the test stage complete successfully.
