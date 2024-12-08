@@ -45,4 +45,4 @@ deploy: # This job runs in the deploy stage.
     environment: production
     script:
         - cd ./releases
-		- ls
+        - ls
