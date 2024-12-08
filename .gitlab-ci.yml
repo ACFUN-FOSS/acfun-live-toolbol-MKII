@@ -37,6 +37,7 @@ pre-build: # This job runs in the build stage, which runs first.
         # - pnpm install
         - VERSION=$(jq -c '.version' package.json)
         - echo $VERSION
+		- echo 111
 # build: # This job runs in the build stage, which runs first.
 #     stage: build
 #     script:
