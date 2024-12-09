@@ -46,8 +46,8 @@ deploy: # This job runs in the deploy stage.
     environment: production
     script:
         - VERSION=$(jq -c '.version' package.json)
-        - UNPACKED_PATH=./release/$VERSION/win-unpacked/
-        - PACKED_PATH=/release/$VERSION/AcfunLiveToolBox-$VERSION.zip
-        - INSTALLER_PATH=./release/$VERSION/AcfunLiveToolBox-Windows-$VERSION-Setup.exe
+        - UNPACKED_PATH='./release/$VERSION/win-unpacked/'
+        - PACKED_PATH='/release/$VERSION/AcfunLiveToolBox-$VERSION.zip'
+        - INSTALLER_PATH='./release/$VERSION/AcfunLiveToolBox-Windows-$VERSION-Setup.exe'
         - zip PACKED_PATH $UNPACKED_PATH
         - gh release create v$VERSION --generate-notes '$PACKED_PATH#UnPacked.exe' '$INSTALLER_PATH#Installer.exe'
