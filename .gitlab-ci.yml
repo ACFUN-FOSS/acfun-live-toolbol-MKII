@@ -51,6 +51,6 @@ deploy: # This job runs in the deploy stage.
         - UNPACKED_PATH= $RELEASE_PATH/$VERSION/win-unpacked/
         - PACKED_PATH=$RELEASE_PATH/$VERSION/AcfunLiveToolBox-$VERSION.zip
         - INSTALLER_PATH=$RELEASE_PATH/$VERSION/AcfunLiveToolBox-Windows-$VERSION-Setup.exe
-        - zip PACKED_PATH $UNPACKED_PATH/*
-        - cd /home/gitlab-runner/ghcli/github/acfun-live-toolbox-MKII
+        - zip -r PACKED_PATH $UNPACKED_PATH/*
+        - cd /home/gitlab-runner/ghcli/github/acfun-live-toolbox-MKII/
         - gh release create v$VERSION --generate-notes $PACKED_PATH#UnPacked.exe $INSTALLER_PATH#Installer.exe
