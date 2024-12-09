@@ -17,8 +17,8 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages: # List of stages for jobs, and their order of execution
-    - pre-build
-    - build
+    # - pre-build
+    # - build
     - deploy
 
 cache:
@@ -26,20 +26,20 @@ cache:
         - node_modules/
         - release/
 
-pre-build: # This job runs in the build stage, which runs first.
-    stage: pre-build
-    script:
-        # - ln -s /root/.nvm/versions/node/v22.12.0/bin/node /usr/bin/node
-        # - ln -s /root/.nvm/versions/node/v22.12.0/lib/node /usr/lib/node
-        # - ln -s /root/.nvm/versions/node/v22.12.0/bin/npm /usr/bin/npm
-        # - ln -s /root/.nvm/versions/node/v22.12.0/bin/pnpm /usr/bin/pnpm
-        # - ln -s /root/.nvm/versions/node/v22.12.0/bin/pnpm /usr/bin/pnpm
-        - gh
-        - pnpm install
-build: # This job runs in the build stage, which runs first.
-    stage: build
-    script:
-        - npm run build
+# pre-build: # This job runs in the build stage, which runs first.
+#     stage: pre-build
+#     script:
+#         # - ln -s /root/.nvm/versions/node/v22.12.0/bin/node /usr/bin/node
+#         # - ln -s /root/.nvm/versions/node/v22.12.0/lib/node /usr/lib/node
+#         # - ln -s /root/.nvm/versions/node/v22.12.0/bin/npm /usr/bin/npm
+#         # - ln -s /root/.nvm/versions/node/v22.12.0/bin/pnpm /usr/bin/pnpm
+#         # - ln -s /root/.nvm/versions/node/v22.12.0/bin/pnpm /usr/bin/pnpm
+#         - gh
+#         - pnpm install
+# build: # This job runs in the build stage, which runs first.
+#     stage: build
+#     script:
+#         - npm run build
 
 deploy: # This job runs in the deploy stage.
     stage: deploy # It only runs when *both* jobs in the test stage complete successfully.
@@ -51,6 +51,7 @@ deploy: # This job runs in the deploy stage.
         - UNPACKED_PATH= $RELEASE_PATH/$VERSION/win-unpacked/
         - PACKED_PATH=$RELEASE_PATH/$VERSION/AcfunLiveToolBox-$VERSION.zip
         - INSTALLER_PATH=$RELEASE_PATH/$VERSION/AcfunLiveToolBox-Windows-$VERSION-Setup.exe
-        - zip -r PACKED_PATH $UNPACKED_PATH/*
+        - echo $UNPACKED_PATH
+        - zip -r PACKED_PATH $UNPACKED_PATH
         - cd /home/gitlab-runner/ghcli/github/acfun-live-toolbox-MKII/
-        - gh release create v$VERSION --generate-notes $PACKED_PATH#UnPacked.exe $INSTALLER_PATH#Installer.exe
+        - gh release create v$VERSION --generate-notes $PACKED_PATH#UnPacked.zip $INSTALLER_PATH#Installer.exe
