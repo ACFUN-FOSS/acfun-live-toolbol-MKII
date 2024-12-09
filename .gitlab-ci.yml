@@ -45,9 +45,9 @@ deploy: # This job runs in the deploy stage.
     stage: deploy # It only runs when *both* jobs in the test stage complete successfully.
     environment: production
     script:
-        - VERSION=$(jq -c '.version' package.json)
-        - UNPACKED_PATH='./release/$VERSION/win-unpacked/'
-        - PACKED_PATH='/release/$VERSION/AcfunLiveToolBox-$VERSION.zip'
-        - INSTALLER_PATH='./release/$VERSION/AcfunLiveToolBox-Windows-$VERSION-Setup.exe'
+        - VERSION=$($(jq -c '.version' package.json) | sed 's/\"//g')
+        - UNPACKED_PATH=./release/$VERSION/win-unpacked/
+        - PACKED_PATH=/release/$VERSION/AcfunLiveToolBox-$VERSION.zip
+        - INSTALLER_PATH=./release/$VERSION/AcfunLiveToolBox-Windows-$VERSION-Setup.exe
         - zip PACKED_PATH $UNPACKED_PATH
-        - gh release create v$VERSION --generate-notes '$PACKED_PATH#UnPacked.exe' '$INSTALLER_PATH#Installer.exe'
+        - gh release create v$VERSION --generate-notes $PACKED_PATH#UnPacked.exe $INSTALLER_PATH#Installer.exe
