@@ -19,7 +19,7 @@
 stages: # List of stages for jobs, and their order of execution
     - pre-build
     - build
-    - deploy
+    - deploy_github
 
 cache:
     paths:
@@ -39,12 +39,14 @@ build: # This job runs in the build stage, which runs first.
     stage: build
     script:
         - rm -r ./release/*
+        - echo "开始构建"
         - npm run build
 
 deploy: # This job runs in the deploy stage.
     stage: deploy # It only runs when *both* jobs in the test stage complete successfully.
     environment: production
     script:
+        - echo "发布至github"
         - VER=$(jq -c '.version' package.json)
         - VERSION=${VER//\"/}
         - RELEASE_PATH=$(realpath ./release)/$VERSION
@@ -54,3 +56,13 @@ deploy: # This job runs in the deploy stage.
         - zip -r $PACKED_PATH $RELEASE_PATH/win-unpacked
         - cd /home/gitlab-runner/ghcli/github/acfun-live-toolbox-MKII/
         - gh release create v$VERSION --generate-notes $PACKED_PATH#UnPacked.zip $INSTALLER_PATH#Installer.exe
+        - echo "发布至服务器"
+        - PUBLISH_PATH = /home/gitlab-runner/publish/toolbox/$VERSION
+        - |
+            if [-d $PUBLISH_PATH]; then
+                rm -r PUBLISH_PATH
+            fi
+        - mkdir -p $PUBLISH_PATH
+        - mv $PACKED_PATH  $PUBLISH_PATH/UnPacked.zip
+        - mv $INSTALLER_PATH  $PUBLISH_PATH/installer.exe
+        - /home/gitlab-runner/publish/toolbox/toolbox.sh
